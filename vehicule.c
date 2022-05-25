@@ -2,14 +2,14 @@
 // Created by grego on 24.05.2022.
 //
 
-#include <stdint.h>  //uint
-
-typedef enum {CAMIONETTE, VOITURE} TVehicule;
-typedef enum {STANDARD, HAUT_GAMME} TVoiture;
+#include <stdio.h>
+#include <inttypes.h> //uint
+#include "vehicule.h"
 
 const char* const TVEHICULE[] = {"Camionette", "Voiture"};
 const char* const TVOITURE[] = {"Standard", "Haut de gamme"};
 
+/*
 //Camionette
 typedef struct {
    double volTransport;
@@ -60,4 +60,25 @@ typedef struct {
    ChoixVehicule choixVehicule;
    NumeroPlaque numeroPlaque;
    char* marque;
-} Vehicule;
+} Vehicule;*/
+
+
+void afficherVehicule(const Vehicule* vehicule){
+    printf("Type de vehicule : %s\n", TVEHICULE[vehicule->tVehicule]);
+    printf("Plaque : %s\n", vehicule->numeroPlaque);
+    printf("Marque : %s\n", vehicule->marque);
+    if(vehicule->tVehicule == CAMIONETTE){
+        printf("Volume de transport [m3] : %lf\n", vehicule->typeVehicule.camionette.volTransport);
+    }
+    else{
+        printf("Poids [kg] : %" PRIu16 "\n", vehicule->typeVehicule.voiture.poids);
+        printf("Categorie de voiture : %s\n", TVOITURE[vehicule->typeVehicule.voiture.tVoiture]);
+        if(vehicule->typeVehicule.voiture.tVoiture == STANDARD){
+            printf("Cylindree [cm3] : %" PRIu16 "\n", vehicule->typeVehicule.voiture.typeVoiture.voitureStd.cylindree);
+            printf("Rejet CO2 [g/km2] : %" PRIu16 "\n", vehicule->typeVehicule.voiture.typeVoiture.voitureStd.rejetCO2);
+        }
+        else{
+            printf("Puissance [CV] : %" PRIu16 "\n", vehicule->typeVehicule.voiture.typeVoiture.voitureHg.puissance);
+        }
+    }
+}
