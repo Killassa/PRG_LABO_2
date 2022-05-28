@@ -16,29 +16,49 @@ Compilateur    : Mingw-w64 g++ 11.2.0
 
 #include "vehicule.h"
 
+#define FORMAT "%-*s : "
+
 const char* const TVEHICULE[] = {"Camionette", "Voiture"};
 const char* const TVOITURE[]  = {"Standard", "Haut de gamme"};
 
+const size_t NOMBRE_CARACTERE = 24;
+
 void afficherVehicule(const Vehicule* vehicule) {
-   printf("Type de vehicule : %s\n", TVEHICULE[vehicule->tVehicule]);
-   printf("Plaque : %s\n", vehicule->numeroPlaque);
-   printf("Marque : %s\n", vehicule->marque);
+
+   printf(FORMAT "%s\n", NOMBRE_CARACTERE, "Type de vehicule", TVEHICULE[vehicule->tVehicule]);
+   printf(FORMAT "%s\n", NOMBRE_CARACTERE, "Plaque", vehicule->numeroPlaque);
+   printf(FORMAT "%s\n", NOMBRE_CARACTERE, "Marque", vehicule->marque);
 
    if (vehicule->tVehicule == CAMIONETTE) {
-      printf("Volume de transport [m3] : %lf\n",
+      printf(FORMAT "%.2lf\n",
+             NOMBRE_CARACTERE,
+             "Volume de transport [m3]",
              vehicule->typeVehicule.camionette.volTransport);
    } else {
-      printf("Poids [kg] : %" PRIu16 "\n", vehicule->typeVehicule.voiture.poids);
-      printf("Categorie de voiture : %s\n",
+      printf(FORMAT "%" PRIu16 "\n",
+             NOMBRE_CARACTERE,
+             "Poids [kg]",
+             vehicule->typeVehicule.voiture.poids);
+
+      printf(FORMAT "%s\n",
+             NOMBRE_CARACTERE,
+             "Categorie de voiture",
              TVOITURE[vehicule->typeVehicule.voiture.tVoiture]);
 
       if (vehicule->typeVehicule.voiture.tVoiture == STANDARD) {
-         printf("Cylindree [cm3] : %" PRIu16 "\n",
+         printf(FORMAT "%" PRIu16 "\n",
+                NOMBRE_CARACTERE,
+                "Cylindree [cm3]",
                 vehicule->typeVehicule.voiture.typeVoiture.voitureStd.cylindree);
-         printf("Rejet CO2 [g/km2] : %" PRIu16 "\n",
+
+         printf(FORMAT "%" PRIu16 "\n",
+                NOMBRE_CARACTERE,
+                "Rejet CO2 [g/km2]",
                 vehicule->typeVehicule.voiture.typeVoiture.voitureStd.rejetCO2);
       } else {
-         printf("Puissance [CV] : %" PRIu16 "\n",
+         printf(FORMAT "%" PRIu16 "\n",
+                NOMBRE_CARACTERE,
+                "Puissance [CV]",
                 vehicule->typeVehicule.voiture.typeVoiture.voitureHg.puissance);
       }
    }
@@ -117,4 +137,12 @@ Vehicule camionette(const char* numeroPlaque, const char* marque, double volTran
    strncpy(v.marque, marque, TAILLE_MAX_MARQUE);
 
    return v;
+}
+
+const char* obtenirNomTVehicule(TVehicule tVehicule) {
+   return TVEHICULE[tVehicule];
+}
+
+const char* obtenirNomTVoiture(TVoiture tVoiture) {
+   return TVOITURE[tVoiture];
 }

@@ -100,4 +100,18 @@ Vehicule voitureHautDeGamme(const char* numeroPlaque, const char* marque, uint16
  */
 Vehicule camionette(const char* numeroPlaque, const char* marque, double volTransport);
 
+/**
+ *
+ * @param tVehicule
+ * @return
+ */
+const char* obtenirNomTVehicule(TVehicule tVehicule);
+
+/**
+ *
+ * @param tVoiture
+ * @return
+ */
+const char* obtenirNomTVoiture(TVoiture tVoiture);
+
 #endif //PRG_LABO_2_VEHICULE_H
