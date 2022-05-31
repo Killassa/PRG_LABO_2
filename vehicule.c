@@ -4,63 +4,71 @@ Nom du fichier : vehicule.c
 Nom du labo    : Laboratoire no. 2
 Auteur(s)      : Eric Peronetti, Grégory Rey-Mermet, Célestin Piccin
 Date creation  : 24.05.2022
-Description    : ???
-Remarque(s)    : ???
+Description    : Fichier contenant les définitions nécessaires pour la voiture
+Remarque(s)    : -
 Compilateur    : Mingw-w64 g++ 11.2.0
 -------------------------------------------------------------------------------------
 */
 
-#include <stdio.h>
+#include <stdio.h>    //printf, PRI
 #include <inttypes.h> //uint
-#include <string.h>
+#include <string.h>   //strncpy
 
 #include "vehicule.h"
 
 #define FORMAT "%-*s : "
 
+//Les noms des types de véhicule en toutes lettres
 const char* const TVEHICULE[] = {"Camionette", "Voiture"};
+//Les noms des types de voiture en toutes lettres
 const char* const TVOITURE[]  = {"Standard", "Haut de gamme"};
 
-const size_t NOMBRE_CARACTERE = 24;
+//Le nombre de caractères pour le format (le format demande un int et non un size_t)
+const int NOMBRE_CARACTERE = 24;
 
 void afficherVehicule(const Vehicule* vehicule) {
-
    printf(FORMAT "%s\n", NOMBRE_CARACTERE, "Type de vehicule", TVEHICULE[vehicule->tVehicule]);
    printf(FORMAT "%s\n", NOMBRE_CARACTERE, "Plaque", vehicule->numeroPlaque);
    printf(FORMAT "%s\n", NOMBRE_CARACTERE, "Marque", vehicule->marque);
 
-   if (vehicule->tVehicule == CAMIONETTE) {
-      printf(FORMAT "%.2lf\n",
-             NOMBRE_CARACTERE,
-             "Volume de transport [m3]",
-             vehicule->typeVehicule.camionette.volTransport);
-   } else {
-      printf(FORMAT "%" PRIu16 "\n",
-             NOMBRE_CARACTERE,
-             "Poids [kg]",
-             vehicule->typeVehicule.voiture.poids);
-
-      printf(FORMAT "%s\n",
-             NOMBRE_CARACTERE,
-             "Categorie de voiture",
-             TVOITURE[vehicule->typeVehicule.voiture.tVoiture]);
-
-      if (vehicule->typeVehicule.voiture.tVoiture == STANDARD) {
+   switch (vehicule->tVehicule) {
+      case CAMIONETTE:
+         printf(FORMAT "%.2lf\n",
+                NOMBRE_CARACTERE,
+                "Volume de transport [m3]",
+                vehicule->typeVehicule.camionette.volTransport);
+         break;
+      case VOITURE:
          printf(FORMAT "%" PRIu16 "\n",
                 NOMBRE_CARACTERE,
-                "Cylindree [cm3]",
-                vehicule->typeVehicule.voiture.typeVoiture.voitureStd.cylindree);
+                "Poids [kg]",
+                vehicule->typeVehicule.voiture.poids);
 
-         printf(FORMAT "%" PRIu16 "\n",
+         printf(FORMAT "%s\n",
                 NOMBRE_CARACTERE,
-                "Rejet CO2 [g/km2]",
-                vehicule->typeVehicule.voiture.typeVoiture.voitureStd.rejetCO2);
-      } else {
-         printf(FORMAT "%" PRIu16 "\n",
-                NOMBRE_CARACTERE,
-                "Puissance [CV]",
-                vehicule->typeVehicule.voiture.typeVoiture.voitureHg.puissance);
-      }
+                "Categorie de voiture",
+                TVOITURE[vehicule->typeVehicule.voiture.tVoiture]);
+
+         switch (vehicule->typeVehicule.voiture.tVoiture) {
+            case STANDARD:
+               printf(FORMAT "%" PRIu16 "\n",
+                      NOMBRE_CARACTERE,
+                      "Cylindree [cm3]",
+                      vehicule->typeVehicule.voiture.typeVoiture.voitureStd.cylindree);
+
+               printf(FORMAT "%" PRIu16 "\n",
+                      NOMBRE_CARACTERE,
+                      "Rejet CO2 [g/km]",
+                      vehicule->typeVehicule.voiture.typeVoiture.voitureStd.rejetCO2);
+               break;
+            case HAUT_GAMME:
+               printf(FORMAT "%" PRIu16 "\n",
+                      NOMBRE_CARACTERE,
+                      "Puissance [CV]",
+                      vehicule->typeVehicule.voiture.typeVoiture.voitureHg.puissance);
+               break;
+         }
+         break;
    }
 }
 
@@ -69,6 +77,8 @@ Vehicule voitureStandard(const char* numeroPlaque,
                          uint16_t poids,
                          uint16_t cylindree,
                          uint16_t rejetCO2) {
+   //Ici il n'est pas nécessaire de mettre tous les noms des paramètres mais pour
+   //une question de lisibilité nous avons décidé de tous les préciser
    Vehicule v = {
       .tVehicule=VOITURE,
       .numeroPlaque="",
@@ -87,6 +97,7 @@ Vehicule voitureStandard(const char* numeroPlaque,
       }
    };
 
+   //Recopie du numéro de plaque et de la marque dans le vehicule
    strncpy(v.numeroPlaque, numeroPlaque, TAILLE_MAX_NUMERO_PLAQUE);
    strncpy(v.marque, marque, TAILLE_MAX_MARQUE);
 
@@ -97,7 +108,8 @@ Vehicule voitureHautDeGamme(const char* numeroPlaque,
                             const char* marque,
                             uint16_t poids,
                             uint16_t puissance) {
-
+   //Ici il n'est pas nécessaire de mettre tous les noms des paramètres mais pour
+   //une question de lisibilité nous avons décidé de tous les préciser
    Vehicule v = {
       .tVehicule=VOITURE,
       .numeroPlaque="",
@@ -115,6 +127,7 @@ Vehicule voitureHautDeGamme(const char* numeroPlaque,
       }
    };
 
+   //Recopie du numéro de plaque et de la marque dans le vehicule
    strncpy(v.numeroPlaque, numeroPlaque, TAILLE_MAX_NUMERO_PLAQUE);
    strncpy(v.marque, marque, TAILLE_MAX_MARQUE);
 
@@ -122,6 +135,8 @@ Vehicule voitureHautDeGamme(const char* numeroPlaque,
 }
 
 Vehicule camionette(const char* numeroPlaque, const char* marque, double volTransport) {
+   //Ici il n'est pas nécessaire de mettre tous les noms des paramètres mais pour
+   //une question de lisibilité nous avons décidé de tous les préciser
    Vehicule v = {
       .tVehicule=CAMIONETTE,
       .numeroPlaque="",
@@ -133,6 +148,7 @@ Vehicule camionette(const char* numeroPlaque, const char* marque, double volTran
       }
    };
 
+   //Recopie du numéro de plaque et de la marque dans le vehicule
    strncpy(v.numeroPlaque, numeroPlaque, TAILLE_MAX_NUMERO_PLAQUE);
    strncpy(v.marque, marque, TAILLE_MAX_MARQUE);
 

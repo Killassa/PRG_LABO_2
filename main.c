@@ -4,29 +4,33 @@ Nom du fichier : main.c
 Nom du labo    : Laboratoire no. 2
 Auteur(s)      : Eric Peronetti, Grégory Rey-Mermet, Célestin Piccin
 Date creation  : 24.05.2022
-Description    : ???
-Remarque(s)    : ???
+Description    : Ce programme permet d'afficher les caractéristiques de différents
+                 véhicules, de calculer la taxe annuelle de chaque véhicule et de
+                 calculer différentes statistiques (somme, moyenne, médianne,
+                 écart-type) par sous-catégorie de type de véhicules.
+Remarque(s)    : -
 Compilateur    : Mingw-w64 g++ 11.2.0
 -------------------------------------------------------------------------------------
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <stdio.h>    //printf
+#include <stdlib.h>   //EXIT_SUCCESS
+#include <math.h>     //pow
+#include <inttypes.h> //uint
 
 #include "taxeParking.h"
 #include "vehicule.h"
 
 typedef struct {
-   Vehicule vehicule;
-   double taxeAnnuelle;
+   Vehicule vehicule;   //Le véhicule
+   double taxeAnnuelle; //La taxe annuelle
 } VehiculeParking;
 
 typedef struct {
-   double somme;
-   double moyenne;
-   double mediane;
-   double ecartType;
+   double somme;     //La sommme
+   double moyenne;   //La moyenne
+   double mediane;   //La médiane
+   double ecartType; //L'écart-type
 } Statistiques;
 
 /**
@@ -70,60 +74,80 @@ int comparaisonDouble(const void* d1, const void* d2);
 void afficherParking(const VehiculeParking* parking, size_t tailleParking);
 
 /**
+ * Affichage des statistiques (somme, moyenne, médiane, écart-type)
  *
- * @param stats
- * @param vehicule
- * @param voiture
+ * @param stats         Structure contenant les différentes statistiques
+ * @param vehicule      Type de véhicule
+ * @param sousCategorie Sous-catégorie à considérer (ex. STANDARD, HAUT_GAMME, ...)
  */
-void afficherStatistiques(const Statistiques* stats, TVehicule vehicule, TVoiture voiture);
+void afficherStatistiques(const Statistiques* stats,
+                          TVehicule vehicule,
+                          uint16_t sousCategorie);
 
 /**
+ * Calcule les différentes statistiques pour un certain type de véhicule et une
+ * certaine sous-catégorie sur un parking
  *
- * @param parking
- * @param tailleParking
- * @param vehicule
- * @param voiture
- * @return
+ * @param parking       Parking
+ * @param tailleParking Taille du parking
+ * @param vehicule      Type de véhicule
+ * @param sousCategorie Sous-catégorie
+ * @return              Les statistiques pour le parking
  */
 Statistiques obtenirStatistiques(const VehiculeParking* parking,
                                  size_t tailleParking,
                                  TVehicule vehicule,
-                                 TVoiture voiture);
+                                 uint16_t sousCategorie);
 
 int main(void) {
+   const double TAXE_DEFAUT = 0; //Taxe par défaut
+
    //Création du parking
    VehiculeParking parking[] = {
-      {camionette("FR 123451", "Ford", 3.3)},
-      {camionette("BL 267564", "Mercedes-Benz", 3.8)},
-      {voitureStandard("BE 88823", "BMW", 1850, 2998, 159)},
-      {voitureStandard("ZG 190002", "Dacia", 1321, 1200, 98)},
-      {voitureStandard("GE 591356", "Smart", 1500, 1150, 162)},
-      {voitureHautDeGamme("VD 119977", "Aston Martin", 1870, 230)},
-      {voitureHautDeGamme("ZH 874569", "Porsche", 2010, 678)}
+      {camionette("FR 123451", "Ford", 3.3), TAXE_DEFAUT},
+      {camionette("BL 267564", "Mercedes-Benz", 3.8), TAXE_DEFAUT},
+      {voitureStandard("BE 88823", "BMW", 1850, 2998, 159), TAXE_DEFAUT},
+      {voitureStandard("ZG 190002", "Dacia", 1321, 1200, 98), TAXE_DEFAUT},
+      {voitureStandard("GE 591356", "Smart", 1500, 1150, 162), TAXE_DEFAUT},
+      {voitureHautDeGamme("VD 119977", "Aston Martin", 1870, 230), TAXE_DEFAUT},
+      {voitureHautDeGamme("ZH 874569", "Porsche", 2010, 678), TAXE_DEFAUT}
    };
 
    size_t tailleParking = sizeof(parking) / sizeof(VehiculeParking);
 
-   for (int i = 0; i < tailleParking; ++i) {
+   //Calcul de toutes les taxes annuelles (pour chaque véhicule)
+   for (size_t i = 0; i < tailleParking; ++i) {
       parking[i].taxeAnnuelle = calculTaxeAnnuelle(&parking[i].vehicule);
    }
 
+   //Affichage du parking par ordre décroissant des taxes annuelles
    triDecroissantParkingTaxe(parking, tailleParking);
-
-   //Affichage du parking
    afficherParking(parking, tailleParking);
 
-   //Affichage somme, moyenne, médiane, écart-type par type de véhicule
-   //Utilisation de "STANDARD" avec une caminonette car le type de la camionette
+   //Calcul somme, moyenne, médiane, écart-type par type de véhicule
+   //Utilisation de 0 avec une caminonette car le type de la camionette
    //n'est pas important et donc non utilisé
-   Statistiques statsCamionette = obtenirStatistiques(parking, tailleParking, CAMIONETTE, STANDARD);
-   Statistiques statsVoitureStd = obtenirStatistiques(parking, tailleParking, VOITURE, STANDARD);
-   Statistiques statsVoitureHG  = obtenirStatistiques(parking, tailleParking, VOITURE, HAUT_GAMME);
-   afficherStatistiques(&statsCamionette, CAMIONETTE, STANDARD);
+   Statistiques statsCamionette = obtenirStatistiques(parking,
+                                                      tailleParking,
+                                                      CAMIONETTE,
+                                                      0);
+   Statistiques statsVoitureStd = obtenirStatistiques(parking,
+                                                      tailleParking,
+                                                      VOITURE,
+                                                      (uint16_t)STANDARD);
+   Statistiques statsVoitureHG  = obtenirStatistiques(parking,
+                                                      tailleParking,
+                                                      VOITURE,
+                                                      (uint16_t)HAUT_GAMME);
+
+   //Affichage des statistiques
+   //Utilisation de 0 avec une caminonette car le type de la camionette
+   //n'est pas important et donc non utilisé
+   afficherStatistiques(&statsCamionette, CAMIONETTE, 0);
    printf("\n");
-   afficherStatistiques(&statsVoitureStd, VOITURE, STANDARD);
+   afficherStatistiques(&statsVoitureStd, VOITURE, (uint16_t)STANDARD);
    printf("\n");
-   afficherStatistiques(&statsVoitureHG, VOITURE, HAUT_GAMME);
+   afficherStatistiques(&statsVoitureHG, VOITURE, (uint16_t)HAUT_GAMME);
 
    //Fin du programme
    printf("%s", "\nPresser ENTER pour quitter...");
@@ -163,11 +187,26 @@ void afficherParking(const VehiculeParking* parking, size_t tailleParking) {
    }
 }
 
-void afficherStatistiques(const Statistiques* stats, TVehicule vehicule, TVoiture voiture) {
+void afficherStatistiques(const Statistiques* stats,
+                          TVehicule vehicule,
+                          uint16_t sousCategorie) {
    printf("%s", obtenirNomTVehicule(vehicule));
-   if (vehicule != CAMIONETTE) {
-      printf(" %s", obtenirNomTVoiture(voiture));
+   switch (vehicule) {
+      case VOITURE:
+         //On fait ce switch si l'utilisateur entre une sous-catégorie qui n'existe
+         //pas. Dans ce cas on ne va pas afficher la sous-catégorie de la voiture.
+         switch ((TVoiture)sousCategorie) {
+            case STANDARD:
+            case HAUT_GAMME:
+               printf(" %s", obtenirNomTVoiture((TVoiture)sousCategorie));
+               break;
+         }
+         break;
+      case CAMIONETTE:
+      default:
+         break;
    }
+
    printf("\n");
 
    printf("Somme      : %.2lf\n", stats->somme);
@@ -179,10 +218,10 @@ void afficherStatistiques(const Statistiques* stats, TVehicule vehicule, TVoitur
 Statistiques obtenirStatistiques(const VehiculeParking* parking,
                                  size_t tailleParking,
                                  TVehicule vehicule,
-                                 TVoiture voiture) {
+                                 uint16_t sousCategorie) {
    double* tab;
    size_t tailleTab = 0;
-   Statistiques stats = {};
+   Statistiques stats = {0, 0, 0, 0};
 
    //Allocation dynamique
    tab = (double*) calloc(tailleParking, sizeof(double));
@@ -191,10 +230,10 @@ Statistiques obtenirStatistiques(const VehiculeParking* parking,
       //Cree un tableau avec le type de véhicule désiré et fait le calcul de la somme
       //de ses éléments
       for (size_t i = 0; i < tailleParking; ++i) {
-         if (vehicule == CAMIONETTE &&
-             (&parking[i])->vehicule.tVehicule == CAMIONETTE ||
-             vehicule == VOITURE &&
-             (&parking[i])->vehicule.typeVehicule.voiture.tVoiture == voiture) {
+         Vehicule v = (&parking[i])->vehicule;
+         if ((vehicule == CAMIONETTE && v.tVehicule == CAMIONETTE) ||
+             (vehicule == VOITURE &&
+             v.typeVehicule.voiture.tVoiture == (TVoiture)sousCategorie)) {
             tab[tailleTab++] = parking[i].taxeAnnuelle;
             stats.somme += tab[tailleTab - 1];
          }
@@ -202,18 +241,19 @@ Statistiques obtenirStatistiques(const VehiculeParking* parking,
 
       tab = (double*) realloc(tab, tailleTab * sizeof(double));
       if (tab) {
-         //Tri le tableau de façon décroissante car le tableau peut ne pas être encore
-         //trié
+         //Tri le tableau de façon décroissante car le tableau peut ne pas être
+         //encore trié
          qsort((void*)tab, tailleTab, sizeof(double), comparaisonDouble);
 
          //Calcul de la moyenne
          stats.moyenne = stats.somme / (double)tailleTab;
 
+         size_t indexMilieu = (tailleTab - 1) / 2;
          //Calcul de la médianne
          if(tailleTab % 2) {
-            stats.mediane = tab[(tailleTab - 1) / 2];
+            stats.mediane = tab[indexMilieu];
          } else {
-            stats.mediane = (tab[(tailleTab - 1)  / 2] + tab[(tailleTab - 1) / 2 + 1]) / 2;
+            stats.mediane = (tab[indexMilieu] + tab[indexMilieu + 1]) / 2;
          }
 
          //Calcul de l'écart-type
