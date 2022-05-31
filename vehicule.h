@@ -25,8 +25,14 @@ Compilateur    : Mingw-w64 g++ 11.2.0
 typedef char NumeroPlaque[TAILLE_MAX_NUMERO_PLAQUE + 1];
 typedef char Marque[TAILLE_MAX_MARQUE + 1];
 
-typedef enum {CAMIONETTE, VOITURE} TVehicule; //Les types de vehicules
-typedef enum {STANDARD, HAUT_GAMME} TVoiture; //Les types de voiture
+typedef enum {
+   CAMIONETTE,
+   VOITURE
+} TVehicule; //Les types de vehicules
+typedef enum {
+   STANDARD,
+   HAUT_GAMME
+} TVoiture; //Les types de voiture
 
 //Camionette
 typedef struct {

@@ -21,7 +21,7 @@ Compilateur    : Mingw-w64 g++ 11.2.0
 //Les noms des types de véhicule en toutes lettres
 const char* const TVEHICULE[] = {"Camionette", "Voiture"};
 //Les noms des types de voiture en toutes lettres
-const char* const TVOITURE[]  = {"Standard", "Haut de gamme"};
+const char* const TVOITURE[] = {"Standard", "Haut de gamme"};
 
 //Le nombre de caractères pour le format (le format demande un int et non un size_t)
 const int NOMBRE_CARACTERE = 24;

@@ -104,13 +104,13 @@ int main(void) {
 
    //Création du parking
    VehiculeParking parking[] = {
-      {camionette("FR 123451", "Ford", 3.3), TAXE_DEFAUT},
-      {camionette("BL 267564", "Mercedes-Benz", 3.8), TAXE_DEFAUT},
-      {voitureStandard("BE 88823", "BMW", 1850, 2998, 159), TAXE_DEFAUT},
-      {voitureStandard("ZG 190002", "Dacia", 1321, 1200, 98), TAXE_DEFAUT},
-      {voitureStandard("GE 591356", "Smart", 1500, 1150, 162), TAXE_DEFAUT},
+      {camionette("FR 123451", "Ford", 3.3),                       TAXE_DEFAUT},
+      {camionette("BL 267564", "Mercedes-Benz", 3.8),              TAXE_DEFAUT},
+      {voitureStandard("BE 88823", "BMW", 1850, 2998, 159),        TAXE_DEFAUT},
+      {voitureStandard("ZG 190002", "Dacia", 1321, 1200, 98),      TAXE_DEFAUT},
+      {voitureStandard("GE 591356", "Smart", 1500, 1150, 162),     TAXE_DEFAUT},
       {voitureHautDeGamme("VD 119977", "Aston Martin", 1870, 230), TAXE_DEFAUT},
-      {voitureHautDeGamme("ZH 874569", "Porsche", 2010, 678), TAXE_DEFAUT}
+      {voitureHautDeGamme("ZH 874569", "Porsche", 2010, 678),      TAXE_DEFAUT}
    };
 
    size_t tailleParking = sizeof(parking) / sizeof(VehiculeParking);
@@ -135,10 +135,10 @@ int main(void) {
                                                       tailleParking,
                                                       VOITURE,
                                                       (uint16_t)STANDARD);
-   Statistiques statsVoitureHG  = obtenirStatistiques(parking,
-                                                      tailleParking,
-                                                      VOITURE,
-                                                      (uint16_t)HAUT_GAMME);
+   Statistiques statsVoitureHG = obtenirStatistiques(parking,
+                                                     tailleParking,
+                                                     VOITURE,
+                                                     (uint16_t)HAUT_GAMME);
 
    //Affichage des statistiques
    //Utilisation de 0 avec une caminonette car le type de la camionette
@@ -161,7 +161,7 @@ void viderBuffer(void) {
 
    do {
       c = getchar();
-   } while(c != '\n' && c != EOF);
+   } while (c != '\n' && c != EOF);
 }
 
 void triDecroissantParkingTaxe(const VehiculeParking* parking, size_t tailleParking) {
@@ -233,13 +233,13 @@ Statistiques obtenirStatistiques(const VehiculeParking* parking,
          Vehicule v = (&parking[i])->vehicule;
          if ((vehicule == CAMIONETTE && v.tVehicule == CAMIONETTE) ||
              (vehicule == VOITURE &&
-             v.typeVehicule.voiture.tVoiture == (TVoiture)sousCategorie)) {
+              v.typeVehicule.voiture.tVoiture == (TVoiture)sousCategorie)) {
             tab[tailleTab++] = parking[i].taxeAnnuelle;
             stats.somme += tab[tailleTab - 1];
          }
       }
 
-      tab = (double*) realloc(tab, tailleTab * sizeof(double));
+      tab = (double*)realloc(tab, tailleTab * sizeof(double));
       if (tab) {
          //Tri le tableau de façon décroissante car le tableau peut ne pas être
          //encore trié
@@ -250,7 +250,7 @@ Statistiques obtenirStatistiques(const VehiculeParking* parking,
 
          size_t indexMilieu = (tailleTab - 1) / 2;
          //Calcul de la médianne
-         if(tailleTab % 2) {
+         if (tailleTab % 2) {
             stats.mediane = tab[indexMilieu];
          } else {
             stats.mediane = (tab[indexMilieu] + tab[indexMilieu + 1]) / 2;
