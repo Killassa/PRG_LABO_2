@@ -8,7 +8,8 @@ Description    : Ce programme permet d'afficher les caractéristiques de différ
                  véhicules, de calculer la taxe annuelle de chaque véhicule et de
                  calculer différentes statistiques (somme, moyenne, médianne,
                  écart-type) par sous-catégorie de type de véhicules.
-Remarque(s)    : -
+Remarque(s)    : L'affichage des véhicules est fait de façon décroissante en fonction
+                 de la taxe annuelle
 Compilateur    : Mingw-w64 g++ 11.2.0
 -------------------------------------------------------------------------------------
 */
